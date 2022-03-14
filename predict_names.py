@@ -28,7 +28,7 @@ def eval(model, texts,targets, verbose=False):
             if pred.strip().lower() == target.strip().lower():
                 correct += 1
             else:
-                errors.append(target)
+                errors.append((pred, target))
             
             # if verbose: print(text, pred, target)
 
@@ -96,7 +96,7 @@ def main():
     fieldnames = ["model",0,1,2,3]
     results = []
 
-    data_dir = 'raw_data/simple_SVO/names/'
+    data_dir = 'cloze/simple_SVO/names/'
     out_dir = data_dir + "results.csv"
 
     for model in models:
@@ -126,15 +126,17 @@ def test():
     "roberta-large", 
     "gpt2", 
     "gpt2-medium",] 
-    models = ["gpt2","gpt2-medium"] 
-    data_dir = 'raw_data/simple_SVO/names/'
+    models = ['bert-base-uncased'] 
+    data_dir = 'cloze/simple_SVO/names/my_name/'
     
-    f = data_dir + f"num_attractors=0.csv"
+    f = data_dir + f"num_attractors=1.csv"
 
     for model in models:
         texts,targets = get_data(f)
 
         # print(eval(model, texts[:20], targets[:20], verbose=True))
-        print(eval(model, texts, targets, verbose=True))
+        acc, err = eval(model, texts, targets, verbose=False)
+        print(f"model: {acc}")
+        print(err[:20])
     
-main()
+test()
