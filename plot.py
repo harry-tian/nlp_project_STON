@@ -21,6 +21,40 @@ linestyle_list = ['solid','dashed','dashdot','dotted','solid','dashed','dashdot'
 temp = "complete_data_For_MultipleEntityObjectDistractorAccuracy"
 count_distractors = [0,1,2,3]
 
+def plot_cloze_names(title=None):
+    plt.rcParams.update({'legend.fontsize':12})
+    fig,ax =  plt.subplots(2,2, figsize=(16,12), sharey=True, sharex=True)
+    for i, temp in enumerate(["his_name","her_name","my_name","your_name"]):
+        if i == 0: idx = (0,0)
+        elif i == 1: idx = (0,1)
+        elif i == 2: idx = (1,0)
+        elif i == 3: idx = (1,1)
+        data_dir = f"cloze/simple_SVO/names/{temp}/results.csv"
+        
+        reader = csv.DictReader(open(data_dir))
+        results = {}
+        for row in reader:
+            model = row['model']
+            results[model] = [1, float(row['1'].strip()),float(row['2'].strip()),float(row['3'].strip())]
+            
+        for j, (model, acc) in enumerate(results.items()):
+            ax[idx[0]][idx[1]].plot([0, 1,2,3], acc,linewidth=2.0, color=color_list[j],
+                markersize=7,linestyle=linestyle_list[j],label=model,marker=marker_list[j])
+
+        ax[idx[0]][idx[1]].set_xticks([0, 1,2,3])
+        ax[idx[0]][idx[1]].set_yticks(np.arange(0,1.1,0.1))
+        
+        ax[idx[0]][idx[1]].set_xlabel('number of attractors', labelpad=1)
+        ax[idx[0]][idx[1]].set_ylabel('accuracy')
+        temp = temp.split("_")
+        subtitle = f"\"{temp[0]} {temp[1]} is [MASK]\""
+        ax[idx[0]][idx[1]].set_title(subtitle)
+        
+    plt.legend(loc='upper right', bbox_to_anchor=(0.9, -0.1),fancybox=True, shadow=True, ncol=8)
+    if not title: title = "cloze task: names"
+    fig.suptitle(title, fontsize=25)
+    plt.show()
+    
 def plot_cloze(results, title=None, legend=False):
     f = open(results)
     reader = csv.DictReader(f)

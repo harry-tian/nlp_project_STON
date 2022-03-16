@@ -95,10 +95,10 @@ def name_1():
         sentence = " ".join(sentence)
         sentences.append(sentence)
         answers.append(n2)
+
     return sentences, answers
 
 def name_2():
-    all_names = male_names + female_names
     my_names = choice(all_names, n)
     sentences = []
     answers = []
